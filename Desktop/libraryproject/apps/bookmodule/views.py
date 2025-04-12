@@ -1,9 +1,49 @@
 from django.shortcuts import render 
 from django.shortcuts import HttpResponse
 from django.http import HttpResponse, HttpResponseBadRequest
-
 from django.shortcuts import render
-from .models import Book
+from .models import Book, Student 
+from django.db.models import Q
+from django.db.models import Count, Sum, Avg, Max, Min
+
+from django.db.models import Count
+
+def task7(request):#lab 8
+    stats = Student.objects.values('address__city').annotate(student_count=Count('id'))
+    return render(request, 'bookmodule/task7.html', {'stats': stats})
+
+def task5(request):#lab 8
+    stats = Book.objects.aggregate(
+        total_books=Count('id'),
+        total_price=Sum('price'),
+        average_price=Avg('price'),
+        max_price=Max('price'),
+        min_price=Min('price')
+    )
+    return render(request, 'bookmodule/task5.html', {'stats': stats})
+
+
+def task4(request):#lab 8
+    books = Book.objects.all().order_by('title')  
+    return render(request, 'bookmodule/task4.html', {'books': books})
+
+def task3(request):#lab8
+    books = Book.objects.filter(
+        ~Q(edition__gt=3) & ~(
+            Q(title__icontains="co") | Q(author__icontains="co")
+        )
+    )
+    return render(request, 'bookmodule/task3.html', {'books': books})
+
+def task2(request):#lab8
+    books = Book.objects.filter(
+        Q(edition__gt=3) & (Q(title__icontains="co") | Q(author__icontains="co"))
+    )
+    return render(request, 'bookmodule/task2.html', {'books': books})
+
+def task1(request):#lab 8
+    books = Book.objects.filter(Q(price__lte=80))
+    return render(request,'bookmodule/task1.html', {'books': books})
 
 
 def simple_query(request):#lab 7
