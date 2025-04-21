@@ -1,12 +1,106 @@
-from django.shortcuts import render 
+from django.shortcuts import render
 from django.shortcuts import HttpResponse
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
-from .models import Book, Student 
+from .models import Book, Student ,Department, Course
 from django.db.models import Q
 from django.db.models import Count, Sum, Avg, Max, Min
-
+from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Count
+from .forms import BookForm
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Book
+#lab10
+def lab9_part1_listbooks(request):
+    books = Book.objects.all
+    return render(request, 'bookmodule/lab9_list.html',{'books':books})
+
+def lab9_part1_addbook(request):
+    if request.method =='POST':
+        title = request.POST.get('title')
+        author = request.POST.get('author')
+        price = request.POST.get('price')
+        edition = request.POST.get('edition')
+        Book.objects.create(title=title, author=author, price=price,edition=edition)
+
+        return redirect('lab9-list')  
+    return render(request, 'bookmodule/lab9_add.html')
+
+
+def lab9_part1_editbook(request,book_id):
+    book = Book.objects.get(id=book_id)
+    if request.method =='POST':
+        title = request.POST.get('title')
+        author = request.POST.get('author')
+        price = request.POST.get('price')
+        edition = request.POST.get('edition')
+
+        book.title = title
+        book.author = author
+        book.price = price
+        book.edition = edition
+        book.save()
+        return redirect('lab9-list')
+    return render(request, 'bookmodule/lab9_edit.html',{'book':book})
+
+
+def lab9_part1_deletebook(request,book_id):
+    book = Book.objects.get(id=book_id)
+    if request.method =='POST':
+        book.delete()
+        return redirect('lab9-list')  
+    return render(request, 'bookmodule/lab9_delete.html',{'book':book})   
+
+
+
+def lab9_part1_add_form(request):
+    if request.method == 'POST':
+        form = BookForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('lab9-list')
+    else:
+        form = BookForm()
+
+    return render(request, 'bookmodule/lab9_add_form.html', {'form': form})
+
+
+def lab9_part1_edit_form(request, book_id):
+    book = Book.objects.get(id=book_id)
+
+    if request.method == 'POST':
+        form = BookForm(request.POST, instance=book)
+        if form.is_valid():
+            form.save()
+            return redirect('lab9-list')
+    else:
+        form = BookForm(instance=book)
+
+    return render(request, 'bookmodule/lab9_edit_form.html', {'form': form, 'book': book})
+########
+
+#lab9
+def task1Lab9(request):
+    departments = Department.objects.annotate(student_count=Count('student'))
+    return render(request, 'bookmodule/task1Lab9.html', {'departments': departments})
+
+def task2Lab9(request):
+    courses = Course.objects.annotate(student_count=Count('student'))
+    return render(request, 'bookmodule/task2Lab9.html', {'courses': courses})
+
+def task3Lab9(request):
+    department = Department.objects.annotate(student_count=Min('student__id'))
+    return render(request, 'bookmodule/task3Lab9.html', {'department': department})
+
+def task4Lab9(request):
+    departments = Department.objects.annotate(student_count=Count('student')).filter(student_count__gt=2).order_by('-student_count')
+    return render(request, 'bookmodule/task4Lab9.html', {'departments': departments})
+
+####
+
+
+
+
 
 def task7(request):#lab 8
     stats = Student.objects.values('address__city').annotate(student_count=Count('id'))
