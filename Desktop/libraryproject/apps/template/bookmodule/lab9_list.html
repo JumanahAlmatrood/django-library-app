@@ -30,7 +30,8 @@
               </td>
             
               <td>
-                  <a href="{% url 'lab9-edit-form' book.id %}">Edit</a> 
+                  <a href="{% url 'lab9-edit-form' book.id %}">Edit</a> |
+                  <a href="{% url 'lab9-delete' book.id %}">Delete</a>
               </td>
           </tr>
           {% endfor %}

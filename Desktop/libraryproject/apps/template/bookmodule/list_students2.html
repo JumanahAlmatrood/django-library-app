@@ -1,0 +1,14 @@
+<h2>Students List (Many-to-Many)</h2>
+<a href="{% url 'add_student2' %}">Add Student</a>
+<ul>
+  {% for student in students %}
+    <li>
+      {{ student.name }} - 
+      {% for address in student.addresses.all %}
+        {{ address.city }}{% if not forloop.last %}, {% endif %}
+      {% endfor %}
+      <a href="{% url 'edit_student2' student.id %}">Edit</a>
+      <a href="{% url 'delete_student2' student.id %}">Delete</a>
+    </li>
+  {% endfor %}
+</ul>

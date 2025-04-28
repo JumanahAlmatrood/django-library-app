@@ -2,14 +2,97 @@ from django.shortcuts import render
 from django.shortcuts import HttpResponse
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
-from .models import Book, Student ,Department, Course
+from .models import Book, Student ,Department, Course,Student2, Address2,Gallery
 from django.db.models import Q
 from django.db.models import Count, Sum, Avg, Max, Min
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Count
-from .forms import BookForm
+from .forms import BookForm,StudentForm,Student2Form,GalleryForm
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Book
+
+#lab11 task 3
+def add_gallery_image(request):
+    if request.method == 'POST':
+        form = GalleryForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('list_gallery_images')
+    else:
+        form = GalleryForm()
+    return render(request, 'bookmodule/add_gallery_image.html', {'form': form})
+
+def list_gallery_images(request):
+    images = Gallery.objects.all()
+    return render(request, 'bookmodule/list_gallery_images.html', {'images': images})
+#lab11 task 2 Students with Many-to-Many Addresses
+
+def list_students2(request):
+    students = Student2.objects.all()
+    return render(request, 'bookmodule/list_students2.html', {'students': students})
+
+def add_student2(request):
+    if request.method == 'POST':
+        form = Student2Form(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('list_students2')
+    else:
+        form = Student2Form()
+    return render(request, 'bookmodule/add_student2.html', {'form': form})
+
+def edit_student2(request, student_id):
+    student = Student2.objects.get(id=student_id)
+    if request.method == 'POST':
+        form = Student2Form(request.POST, instance=student)
+        if form.is_valid():
+            form.save()
+            return redirect('list_students2')
+    else:
+        form = Student2Form(instance=student)
+    return render(request, 'bookmodule/edit_student2.html', {'form': form, 'student': student})
+
+def delete_student2(request, student_id):
+    student = Student2.objects.get(id=student_id)
+    if request.method == 'POST':
+        student.delete()
+        return redirect('list_students2')
+    return render(request, 'bookmodule/delete_student2.html', {'student': student})
+
+
+#11 task 1
+def list_students(request):
+    students = Student.objects.all()
+    return render(request, 'bookmodule/list_students.html', {'students': students})
+def add_student(request):
+    if request.method == 'POST':
+        form = StudentForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('list_students')
+    else:
+        form = StudentForm()
+    return render(request, 'bookmodule/add_student.html', {'form': form})
+def edit_student(request, student_id):
+    student = Student.objects.get(id=student_id)
+    if request.method == 'POST':
+        form = StudentForm(request.POST, instance=student)
+        if form.is_valid():
+            form.save()
+            return redirect('list_students')
+    else:
+        form = StudentForm(instance=student)
+    return render(request, 'bookmodule/edit_student.html', {'form': form, 'student': student})
+def delete_student(request, student_id):
+    student = Student.objects.get(id=student_id)
+    if request.method == 'POST':
+        student.delete()
+        return redirect('list_students')
+    return render(request, 'bookmodule/delete_student.html', {'student': student})
+
+
+
+
 #lab10
 def lab9_part1_listbooks(request):
     books = Book.objects.all

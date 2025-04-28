@@ -1,4 +1,5 @@
 from django.urls import path
+from django.urls import path, include
 from . import views
 
 
@@ -31,6 +32,26 @@ urlpatterns = [
     path('lab9_part1/delete/<int:book_id>', views.lab9_part1_deletebook ,name='lab9-delete'),
     path('lab9_part1/add-form/', views.lab9_part1_add_form ,name='lab9-add-form'),
     path('lab9_part1/edit-form/<int:book_id>', views.lab9_part1_edit_form ,name='lab9-edit-form'),
+
+
+#lab 11 task 1
+    path('list', views.list_students, name='list_students'),
+    path('add/', views.add_student, name='add_student'),
+    path('edit/<int:student_id>/', views.edit_student, name='edit_student'),
+    path('delete/<int:student_id>/', views.delete_student, name='delete_student'),
+    
+    # lab 11 Task 2 URLs
+    path('task2/list/', views.list_students2, name='list_students2'),
+    path('task2/add/', views.add_student2, name='add_student2'),
+    path('task2/edit/<int:student_id>/', views.edit_student2, name='edit_student2'),
+    path('task2/delete/<int:student_id>/', views.delete_student2, name='delete_student2'), 
+    #lab 11 task 3
+    path('task3/add/', views.add_gallery_image, name='add_gallery_image'),
+    path('task3/list/', views.list_gallery_images, name='list_gallery_images'),
+ 
+    
+]
+
     
   
 
@@ -40,5 +61,4 @@ urlpatterns = [
 
 
 
-]
 
