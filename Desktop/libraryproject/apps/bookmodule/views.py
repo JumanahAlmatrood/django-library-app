@@ -12,6 +12,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Book
 
 #lab11 task 3
+from django.contrib.auth.decorators import login_required
+
+@login_required(login_url='login')
 def add_gallery_image(request):
     if request.method == 'POST':
         form = GalleryForm(request.POST, request.FILES)
@@ -19,11 +22,11 @@ def add_gallery_image(request):
             form.save()
             return redirect('list_gallery_images')
     else:
-        form = GalleryForm()
+        form = GalleryForm() # بدون شي
     return render(request, 'bookmodule/add_gallery_image.html', {'form': form})
-
+@login_required(login_url='login')
 def list_gallery_images(request):
-    images = Gallery.objects.all()
+    images = Gallery.objects.all()# انسى هذه 
     return render(request, 'bookmodule/list_gallery_images.html', {'images': images})
 #lab11 task 2 Students with Many-to-Many Addresses
 
@@ -83,6 +86,8 @@ def edit_student(request, student_id):
     else:
         form = StudentForm(instance=student)
     return render(request, 'bookmodule/edit_student.html', {'form': form, 'student': student})
+
+
 def delete_student(request, student_id):
     student = Student.objects.get(id=student_id)
     if request.method == 'POST':
@@ -98,7 +103,7 @@ def lab9_part1_listbooks(request):
     books = Book.objects.all
     return render(request, 'bookmodule/lab9_list.html',{'books':books})
 
-def lab9_part1_addbook(request):
+def lab9_part1_addbook(request):# اول مايفتح الصفحه get يروح ل render بعده redirect
     if request.method =='POST':
         title = request.POST.get('title')
         author = request.POST.get('author')
@@ -106,11 +111,11 @@ def lab9_part1_addbook(request):
         edition = request.POST.get('edition')
         Book.objects.create(title=title, author=author, price=price,edition=edition)
 
-        return redirect('lab9-list')  
+        return redirect('lab9-list') # نفس name في urls 
     return render(request, 'bookmodule/lab9_add.html')
 
 
-def lab9_part1_editbook(request,book_id):
+def lab9_part1_editbook(request,book_id):# بس نحفظ الفرق بينه وبين ادد 
     book = Book.objects.get(id=book_id)
     if request.method =='POST':
         title = request.POST.get('title')
@@ -171,6 +176,7 @@ def task2Lab9(request):
     courses = Course.objects.annotate(student_count=Count('student'))
     return render(request, 'bookmodule/task2Lab9.html', {'courses': courses})
 
+# لازم افهم اللي داخل وش
 def task3Lab9(request):
     department = Department.objects.annotate(student_count=Min('student__id'))
     return render(request, 'bookmodule/task3Lab9.html', {'department': department})
@@ -201,7 +207,8 @@ def task5(request):#lab 8
 
 
 def task4(request):#lab 8
-    books = Book.objects.all().order_by('title')  
+    books = Book.objects.all().order_by('title')  # ترتيب تصاعدي (A → Z)
+    # لو تبين ترتيب تنازلي (Z → A)، تكتبين: .order_by('-title')
     return render(request, 'bookmodule/task4.html', {'books': books})
 
 def task3(request):#lab8
@@ -226,6 +233,7 @@ def task1(request):#lab 8
 def simple_query(request):#lab 7
     mybooks = Book.objects.filter(title__icontains='and')  # <- multiple objects
     return render(request, 'bookmodule/bookList.html', {'books': mybooks})
+
 def complex_query(request):#lab 7
     mybooks = Book.objects.filter(author__isnull=False)\
                           .filter(title__icontains='and')\

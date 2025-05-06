@@ -1,23 +1,27 @@
-.link{
-    padding: 25px 25px;
-    display: block;
-    text-align: center;
-    font-size: 20px;
-}
+.link {
+    padding: 25px 25px;       /* مسافة داخلية من كل الجهات */
+    display: block;           /* يخلي الرابط ياخذ سطر لحاله */
+    text-align: center;       /* يوسّط النص */
+    font-size: 20px;          /* يكبّر الخط */
+  }
+  
 
 #linkNewTap {
     background-color: rgb(170, 224, 149); 
     color: rgb(226, 132, 60);
 }
+
+/*  تمت زيارته (visited)  */
 #linkNewTap:visited {
     color: rgb(240, 116, 62); 
 }
 
+/* مرّ الماوس عليه (hover)  */
 #linkNewTap:hover {
     background-color: rgb(160, 200, 140); 
     color: rgb(129, 88, 224);
 }
-
+/*  تم الضغط عليه (active)  */
 #linkNewTap:active {
     background-color: rgb(100, 150, 100); 
     color: rgb(179, 179, 62);
